@@ -81,10 +81,7 @@ torch::Tensor fused_attention_forward(
     // Allocate output tensor
     auto O = torch::empty_like(Q);
     
-    // Get CUDA stream
-    cudaStream_t stream = at::cuda::getCurrentCUDAStream().stream();
-    
-    // Launch kernel
+    // Launch kernel (uses current CUDA stream by default)
     launch_fused_attention(
         Q.data_ptr<float>(),
         K.data_ptr<float>(),
@@ -94,7 +91,7 @@ torch::Tensor fused_attention_forward(
         num_heads,
         seq_len,
         head_dim,
-        stream
+        0  // Use default stream
     );
     
     // Check for CUDA errors
