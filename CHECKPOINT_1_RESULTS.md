@@ -4,7 +4,7 @@
 
 ## Summary
 
-✅ **ALL TESTS PASSED** - Baseline implementation is working correctly and ready for CUDA optimization.
+**ALL TESTS PASSED** - Baseline implementation is working correctly and ready for CUDA optimization.
 
 ## Hardware Configuration
 

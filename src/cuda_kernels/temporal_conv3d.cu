@@ -12,6 +12,7 @@
 
 #include <cuda_runtime.h>
 #include <cuda_fp16.h>
+#include <cstdio>
 
 // Tile sizes for shared memory
 #define TILE_T 4
