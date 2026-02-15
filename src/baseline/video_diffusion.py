@@ -53,6 +53,18 @@ class BaselineVideoDiffusion:
             # Enable VAE slicing for lower memory usage (if available)
             if hasattr(self.pipe, 'enable_vae_slicing'):
                 self.pipe.enable_vae_slicing()
+            
+            # Enable VAE tiling for even lower memory (if available)
+            if hasattr(self.pipe, 'enable_vae_tiling'):
+                self.pipe.enable_vae_tiling()
+            
+            # Enable model CPU offload for T4 GPU (if available)
+            if hasattr(self.pipe, 'enable_model_cpu_offload'):
+                print("⚠ Enabling CPU offload for T4 GPU memory constraints")
+                self.pipe.enable_model_cpu_offload()
+            
+            # Clear cache before starting
+            torch.cuda.empty_cache()
         
         # Store model components for profiling
         self.vae = self.pipe.vae
@@ -103,12 +115,12 @@ class BaselineVideoDiffusion:
     def generate(
         self,
         image: Union[str, Image.Image],
-        num_frames: int = 25,
-        num_inference_steps: int = 25,
+        num_frames: int = 14,  # Reduced default for T4
+        num_inference_steps: int = 10,  # Reduced default for T4
         fps: int = 6,
         motion_bucket_id: int = 127,
         noise_aug_strength: float = 0.02,
-        decode_chunk_size: int = 8,
+        decode_chunk_size: int = 2,  # Reduced default for T4
         seed: Optional[int] = None,
         return_dict: bool = False,
     ) -> Union[torch.Tensor, dict]:
@@ -117,12 +129,12 @@ class BaselineVideoDiffusion:
         
         Args:
             image: Input image (PIL Image or path)
-            num_frames: Number of frames to generate
-            num_inference_steps: Number of denoising steps
+            num_frames: Number of frames to generate (default 14 for T4 GPU)
+            num_inference_steps: Number of denoising steps (default 10 for T4 GPU)
             fps: Frames per second for output video
             motion_bucket_id: Motion bucket for conditioning (higher = more motion)
             noise_aug_strength: Noise augmentation strength
-            decode_chunk_size: Chunk size for VAE decoding (lower = less memory)
+            decode_chunk_size: Chunk size for VAE decoding (default 2 for T4 GPU)
             seed: Random seed for reproducibility
             return_dict: If True, return dict with timing info
             
@@ -130,6 +142,10 @@ class BaselineVideoDiffusion:
             Generated video tensor of shape (num_frames, 3, height, width)
             or dict with video and timing information
         """
+        # Clear GPU cache before generation
+        if self.device.type == "cuda":
+            torch.cuda.empty_cache()
+        
         # Set seed for reproducibility
         if seed is not None:
             torch.manual_seed(seed)
