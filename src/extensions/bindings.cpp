@@ -82,7 +82,7 @@ torch::Tensor fused_attention_forward(
     auto O = torch::empty_like(Q);
     
     // Get CUDA stream
-    cudaStream_t stream = c10::cuda::getCurrentCUDAStream();
+    cudaStream_t stream = at::cuda::getCurrentCUDAStream().stream();
     
     // Launch kernel
     launch_fused_attention(
