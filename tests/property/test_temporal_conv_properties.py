@@ -17,11 +17,11 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../../src'))
 
 # Try to import custom CUDA operations
 try:
-    import video_diffusion_cuda
+    import video_diffusion_cuda_ops
     CUDA_AVAILABLE = torch.cuda.is_available()
 except ImportError:
     CUDA_AVAILABLE = False
-    video_diffusion_cuda = None
+    video_diffusion_cuda_ops = None
 
 
 # Hypothesis strategies for generating test inputs
@@ -131,7 +131,7 @@ class TestTemporalConvProperties:
         )
         
         # Compute custom kernel output (basic version)
-        custom_output = video_diffusion_cuda.temporal_conv3d(
+        custom_output = video_diffusion_cuda_ops.temporal_conv3d(
             input_tensor,
             weight,
             bias,
@@ -190,7 +190,7 @@ class TestTemporalConvProperties:
         )
         
         # Compute custom kernel output (optimized version)
-        custom_output = video_diffusion_cuda.temporal_conv3d(
+        custom_output = video_diffusion_cuda_ops.temporal_conv3d(
             input_tensor,
             weight,
             bias,
@@ -243,7 +243,7 @@ class TestTemporalConvProperties:
         )
         
         # Compute custom kernel output (no bias)
-        custom_output = video_diffusion_cuda.temporal_conv3d(
+        custom_output = video_diffusion_cuda_ops.temporal_conv3d(
             input_tensor,
             weight,
             None,
@@ -307,7 +307,7 @@ class TestTemporalConvProperties:
             )
             
             # Run custom kernel
-            output = video_diffusion_cuda.temporal_conv3d(
+            output = video_diffusion_cuda_ops.temporal_conv3d(
                 input_tensor,
                 weight,
                 None,

@@ -17,7 +17,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../../src'))
 
 # Try to import custom CUDA operations
 try:
-    import video_diffusion_cuda
+    import video_diffusion_cuda_ops
     CUDA_AVAILABLE = torch.cuda.is_available()
 except ImportError:
     CUDA_AVAILABLE = False
@@ -96,7 +96,7 @@ class TestTemporalConvPerformance:
         
         # Benchmark custom kernel (basic)
         custom_basic_time, custom_basic_output = benchmark_operation(
-            video_diffusion_cuda.temporal_conv3d,
+            video_diffusion_cuda_ops.temporal_conv3d,
             input_tensor, weight, bias,
             stride=list(stride), padding=list(padding),
             use_optimized=False,
@@ -105,7 +105,7 @@ class TestTemporalConvPerformance:
         
         # Benchmark custom kernel (optimized)
         custom_opt_time, custom_opt_output = benchmark_operation(
-            video_diffusion_cuda.temporal_conv3d,
+            video_diffusion_cuda_ops.temporal_conv3d,
             input_tensor, weight, bias,
             stride=list(stride), padding=list(padding),
             use_optimized=True,
@@ -179,7 +179,7 @@ class TestTemporalConvPerformance:
         
         # Benchmark custom kernel (optimized)
         custom_time, custom_output = benchmark_operation(
-            video_diffusion_cuda.temporal_conv3d,
+            video_diffusion_cuda_ops.temporal_conv3d,
             input_tensor, weight, None,
             stride=list(stride), padding=list(padding),
             use_optimized=True,
@@ -233,7 +233,7 @@ class TestTemporalConvPerformance:
         
         # Benchmark custom kernel (optimized)
         custom_time, custom_output = benchmark_operation(
-            video_diffusion_cuda.temporal_conv3d,
+            video_diffusion_cuda_ops.temporal_conv3d,
             input_tensor, weight, bias,
             stride=list(stride), padding=list(padding),
             use_optimized=True,
@@ -280,7 +280,7 @@ class TestTemporalConvPerformance:
         
         # Benchmark custom kernel
         custom_time, _ = benchmark_operation(
-            video_diffusion_cuda.temporal_conv3d,
+            video_diffusion_cuda_ops.temporal_conv3d,
             input_tensor, weight, None,
             stride=[1, 1, 1], padding=[1, 1, 1],
             use_optimized=True,
