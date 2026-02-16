@@ -126,7 +126,6 @@ __global__ void fused_attention_kernel_v2(
     
     // Use registers to store scores (limited by seq_len)
     // For large seq_len, we'll process in chunks
-    const int MAX_SEQ_REGISTER = 512;
     float scores[MAX_SEQ_REGISTER];
     
     for (int k_idx = 0; k_idx < seq_len && k_idx < MAX_SEQ_REGISTER; k_idx++) {
